@@ -29,7 +29,8 @@ jobs:
           fi
 
       - name: Build
-        run: "$HOME/gradle-dist/gradle-9.5.1/bin/gradle" build --stacktrace
+        run: |
+          "$HOME/gradle-dist/gradle-9.5.1/bin/gradle" build --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
