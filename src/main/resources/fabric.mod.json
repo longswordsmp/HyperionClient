@@ -1,0 +1,16 @@
+﻿{
+  "schemaVersion": 1,
+  "id": "hyperion",
+  "version": "1.0.0",
+  "name": "Hyperion",
+  "description": "Enhanced Minecraft utility client",
+  "authors": ["Hyperion Team"],
+  "environment": "client",
+  "entrypoints": { "main": ["com.hyperion.HyperionMod"] },
+  "mixins": ["hyperion.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  }
+}
