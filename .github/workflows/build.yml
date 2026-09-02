@@ -13,27 +13,23 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Download Gradle 8.10
+      - name: Download Gradle 9.5.1
         run: |
           curl -sSL -o /tmp/gradle.zip \
-            https://services.gradle.org/distributions/gradle-8.10-bin.zip
+            https://services.gradle.org/distributions/gradle-9.5.1-bin.zip
           unzip -q /tmp/gradle.zip -d "$HOME/gradle-dist"
+          "$HOME/gradle-dist/gradle-9.5.1/bin/gradle" --version
 
-      - name: Show which Gradle is which
+      - name: Strip BOM from Java files
         run: |
-          echo "--- system gradle ---"
-          which -a gradle || true
-          gradle --version || true
-          echo "--- downloaded gradle ---"
-          "$HOME/gradle-dist/gradle-8.10/bin/gradle" --version
-
-      - name: Strip BOM from all Java source files
-        run: |
-          find src -name "*.java" -exec sed -i '1s/^\xEF\xBB\xBF//' {} \;
+          find src -type f -name '*.java' -exec env LC_ALL=C sed -i '1s/^\xEF\xBB\xBF//' {} +
+          if find src -type f -name '*.java' -exec file {} + | grep -i 'with BOM'; then
+            echo "::error::BOM still present"
+            exit 1
+          fi
 
       - name: Build
-        run: |
-          "$HOME/gradle-dist/gradle-8.10/bin/gradle" build --stacktrace
+        run: "$HOME/gradle-dist/gradle-9.5.1/bin/gradle" build --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
