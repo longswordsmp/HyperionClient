@@ -1,4 +1,3 @@
-﻿# .github/workflows/build.yml
 name: Build Hyperion Client
 on: [push, workflow_dispatch]
 jobs:
@@ -12,8 +11,12 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-      - name: Build
-        run: gradle build
+      - name: Remove BOM from Gradle files
+        run: |
+          sed -i '1s/^\xEF\xBB\xBF//' settings.gradle
+          sed -i '1s/^\xEF\xBB\xBF//' build.gradle
+      - name: Build with Gradle
+        run: ./gradlew build
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
