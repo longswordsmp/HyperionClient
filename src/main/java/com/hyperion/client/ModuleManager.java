@@ -1,13 +1,23 @@
-﻿package com.hyperion.client;
+package com.hyperion.client;
+
 import java.util.ArrayList;
 import java.util.List;
+
 public class ModuleManager {
-    private static List<Module> modules = new ArrayList<>();
+    private static final List<Module> modules = new ArrayList<>();
+
     public static void registerAll() {
-        modules.add(new com.hyperion.modules.basefinding.BaseFinder());
-        modules.add(new com.hyperion.modules.basefinding.SusChunkFinder());
-        modules.add(new com.hyperion.modules.visual.ESP());
-        // add other modules here
+        // Add your modules here later – for now, empty stubs
+        // Example: modules.add(new SomeModule());
     }
-    public static void onTick() { for (Module m : modules) if (m.isEnabled()) m.onTick(); }
+
+    public static void onTick() {
+        for (Module module : modules) {
+            if (module.isEnabled()) {
+                module.onTick();
+            }
+        }
+    }
+
+    // Optional: add getters, toggles, etc. as needed
 }
