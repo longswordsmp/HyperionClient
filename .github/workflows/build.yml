@@ -1,30 +1,36 @@
 name: Build Hyperion Client
-on: [push, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
-          java-version: 21
-          distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: 8.10
-      - name: Remove BOM from Gradle files
+          distribution: temurin
+          java-version: '21'
+
+      - name: Download Gradle 8.10
         run: |
-          sed -i '1s/^\xEF\xBB\xBF//' settings.gradle
-          sed -i '1s/^\xEF\xBB\xBF//' build.gradle
-      - name: Generate Gradle wrapper
-        run: gradle wrapper --gradle-version 8.10
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-      - name: Build with Gradle wrapper
-        run: ./gradlew build
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
+          curl -sSL -o /tmp/gradle.zip \
+            https://services.gradle.org/distributions/gradle-8.10-bin.zip
+          unzip -q /tmp/gradle.zip -d "$HOME/gradle-dist"
+
+      - name: Show which Gradle is which
+        run: |
+          echo "--- system gradle ---"
+          which -a gradle || true
+          gradle --version || true
+          echo "--- downloaded gradle ---"
+          "$HOME/gradle-dist/gradle-8.10/bin/gradle" --version
+
+      - name: Build
+        run: "$HOME/gradle-dist/gradle-8.10/bin/gradle" build --stacktrace
+
+      - uses: actions/upload-artifact@v4
         with:
           name: Hyperion-JAR
           path: build/libs/*.jar
