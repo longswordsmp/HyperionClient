@@ -27,6 +27,10 @@ jobs:
           echo "--- downloaded gradle ---"
           "$HOME/gradle-dist/gradle-8.10/bin/gradle" --version
 
+      - name: Strip BOM from all Java source files
+        run: |
+          find src -name "*.java" -exec sed -i '1s/^\xEF\xBB\xBF//' {} \;
+
       - name: Build
         run: |
           "$HOME/gradle-dist/gradle-8.10/bin/gradle" build --stacktrace
