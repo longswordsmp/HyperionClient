@@ -1,43 +1,24 @@
 plugins {
-    id 'fabric-loom' version '1.7.2'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = '1.0.0'
-group = 'com.hyperion'
+version = project.mod_version
+group = project.maven_group
 
-repositories {
-    mavenCentral()
-    maven {
-        name = 'Fabric'
-        url = 'https://maven.fabricmc.net/'
-    }
+base {
+    archivesName = project.archives_base_name
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.21.1"
-    mappings "net.fabricmc:yarn:1.21.1+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.11"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.97.0+1.21.1"
-    implementation 'io.github.spair:imgui-java-binding:1.86.5'
-    implementation 'io.github.spair:imgui-java-lwjgl3:1.86.5'
-    implementation 'org.openpnp:opencv:4.8.0-0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    include 'io.github.spair:imgui-java-binding:1.86.5'
-    include 'io.github.spair:imgui-java-lwjgl3:1.86.5'
-    include 'org.openpnp:opencv:4.8.0-0'
-    include 'com.google.code.gson:gson:2.10.1'
-}
-
-loom {
-    mixin {
-        defaultRefmapName.set("hyperion-refmap.json")
-    }
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-    filteringCharset "UTF-8"
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
@@ -48,6 +29,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
+    withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
