@@ -17,8 +17,12 @@ jobs:
         run: |
           sed -i '1s/^\xEF\xBB\xBF//' settings.gradle
           sed -i '1s/^\xEF\xBB\xBF//' build.gradle
-      - name: Build with Gradle
-        run: gradle build
+      - name: Generate Gradle wrapper
+        run: gradle wrapper --gradle-version 8.10
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build with Gradle wrapper
+        run: ./gradlew build
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
