@@ -16,7 +16,7 @@ jobs:
           sed -i '1s/^\xEF\xBB\xBF//' settings.gradle
           sed -i '1s/^\xEF\xBB\xBF//' build.gradle
       - name: Build with Gradle
-        run: ./gradlew build
+        run: gradle build
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
